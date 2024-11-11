@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/thutaminthway/go-fiber-gorm/internal/config"
 	"github.com/thutaminthway/go-fiber-gorm/internal/database"
 	"github.com/thutaminthway/go-fiber-gorm/internal/database/migration"
@@ -43,8 +44,15 @@ func main() {
 		return
 	}
 
-	// Start the Fiber app if no migration or seeding is requested
 	app := fiber.New()
+
+	app.Use(cors.New())
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "https://gofiber.io, https://gofiber.net",
+		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
+
 	routes.Setup(app)
 
 	log.Println("Server running on http://localhost:3000")
